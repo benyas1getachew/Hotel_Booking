@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hotel Booking Site</title>
+  </head>
+  <body>
+    <h1 >Hotel Booking Site</h1>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7czo7IVSi2OAtQ9MuT5N1QP9m3UpGL-wEvxO2jNktcbtwnMOm2Gq2xOJaT6k&s" alt="Trulli" width="500" height="333">
+    <div id="hotels"></div>
+    
+    <input id="search-input" type="text">
+    
+    <select id="city-dropdown">
+      <option value="">All cities</option>
+      <option value="NYC">New York</option>
+      <option value="LAX">Los Angeles</option>
+      <option value="Chicago">Chicago</option>
+      <option value="Houston">Houston</option>
+      <option value="Miami">Miami</option>
+    </select>
+    
+    <button id="search-button">Search</button>
+    
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const apiUrl = 'http://localhost:5000';
+        
+        axios.get(`${apiUrl}/api/top-hotels`)
+          .then(response => {
+            const hotels = response.data;
+            const hotelsList = hotels.map(hotel => `<p><a href="/book/${hotel.name}">${hotel.name} - ${hotel.city}</a></p>`).join('');
+            document.getElementById('hotels').innerHTML = hotelsList;
+          })
+          .catch(error => {
+            console.error(error);
+          });
+        
+        const searchButton = document.getElementById('search-button');
+        
+        searchButton.addEventListener('click', () => {
+          const searchQuery = document.getElementById('search-input').value;
+          const city = document.getElementById('city-dropdown').value;
+          
+          axios.post(`${apiUrl}/api/search`, { query: searchQuery , city : city })
+            .then(response => {
+                try{
+                const hotels = response.data.hotels;
+                const hotelsList = hotels.map(hotel => `<p><a href="/book/${hotel.name}">${hotel.name} - ${hotel.city}</a></p>`).join('');
+                const hotelsInfo = `<p>Number of hotels found: ${hotels.length}</p>`;
+                document.getElementById('hotels').innerHTML = hotelsInfo + hotelsList;
+                }
+                catch(err){
+                    console.log(err);
+                    document.getElementById('hotels').innerHTML = '<p>No hotels found</p>';
+                }
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        });
+
+      });
+    </script>
+  </body>
+</html>
