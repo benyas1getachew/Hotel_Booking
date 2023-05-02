@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Apr 15 14:32:31 2023
 
-@author: Benyas
-"""
 
 import pandas as pd
 from flask import Flask
