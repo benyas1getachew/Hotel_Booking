@@ -94,9 +94,21 @@ def search():
             hotels_list = [{'name': row['name'], 'city': row['city'], 'image_link': row['image_link']} for index, row in hotels.iterrows()]
             return jsonify({'hotels': hotels_list})
 
+@app.route('/api/login', methods=['POST'])
+def login():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    users=pd.read_csv('passwords')
+    for user in users:
+        if user['username'] == username and user['password'] == password:
+            return jsonify({'success': True}), 200
+
+    return jsonify({'success': False, 'message': 'Invalid login credentials'}), 401
+
+
 @app.errorhandler(500)
 def internal_server_error(error):
     print(error)
     return {'message': 'Internal server error'}, 500
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
