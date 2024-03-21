@@ -8,7 +8,6 @@ CORS(app)
 from flask import jsonify
 from sqlalchemy import create_engine, text
 
-# Replace 'username', 'password', 'localhost', 'database_name' with the appropriate values
 engine = create_engine('mysql+mysqldb://newuser:password@localhost:3308/hotel_sys')
 
 # Create a connection object
